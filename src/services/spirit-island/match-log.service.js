@@ -6,7 +6,7 @@ import {ErrorBadRequest} from "../../responses/error.response.js";
 const ADVERSARIES = ['England', 'France', 'Habsburg', 'Habsburg Mining', 'Prussia', 'Russia', 'Sweden', 'Scotland']
 
 class MatchLogService {
-  static store = async ({ adversary, fear_stage, invader_card_left, spirits, win, level }, session = null) => {
+  static store = async ({ adversary, fear_stage, invader_card_left, spirits, win, level, real_created_at }, session = null) => {
     if (!ADVERSARIES.includes(adversary)) {
       throw new ErrorBadRequest("Invalid adversary")
     }
@@ -20,6 +20,7 @@ class MatchLogService {
       spirits,
       win,
       level,
+      real_created_at,
       status: "active"
     }, options)
   }
@@ -45,17 +46,20 @@ class MatchLogService {
       }
 
       spirits.forEach(spirit => {
-        if (spiritChart[spirit]) {
-          spiritChart[spirit][adversary][win ? 'win' : 'lose']++
-        } else {
+        if (!spiritChart[spirit]) {
           spiritChart[spirit] = ADVERSARIES.reduce((acc, adversary) => {
             acc[adversary] = {
               win: 0,
               lose: 0
             }
             return acc
-          }, {})
+          }, {
+            total: 0
+          })
         }
+
+        spiritChart[spirit][adversary][win ? 'win' : 'lose']++
+        spiritChart[spirit].total++
       })
     })
 

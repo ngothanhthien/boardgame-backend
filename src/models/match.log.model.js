@@ -31,6 +31,10 @@ const MatchLogSchema = new Schema({
   status: {
     type: String,
     required: true
+  },
+  real_created_at: {
+    type: Date,
+    default: Date.now
   }
 }, {
   timestamps: true,
