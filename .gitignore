@@ -3,4 +3,3 @@ node_modules
 *.xml
 *.idea
 *.iml
-package-lock.json
