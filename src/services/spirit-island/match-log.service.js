@@ -6,12 +6,10 @@ import {ErrorBadRequest} from "../../responses/error.response.js";
 const ADVERSARIES = ['England', 'France', 'Habsburg', 'Habsburg Mining', 'Prussia', 'Russia', 'Sweden', 'Scotland']
 
 class MatchLogService {
-  static store = async ({ adversary, fear_stage, invader_card_left, spirits, win, level, real_created_at }, session = null) => {
+  static store = async ({ adversary, fear_stage, invader_card_left, spirits, win, level, real_created_at }) => {
     if (!ADVERSARIES.includes(adversary)) {
       throw new ErrorBadRequest("Invalid adversary")
     }
-
-    const options = session ? { session } : {};
 
     await MatchLogModel.create({
       adversary,
@@ -22,10 +20,10 @@ class MatchLogService {
       level,
       real_created_at,
       status: "active"
-    }, options)
+    })
   }
   static list = async () => {
-    const matchLogs =await MatchLogModel.find({
+    const matchLogs = await MatchLogModel.find({
       status: "active"
     })
 
